@@ -1,6 +1,7 @@
+from grpc import Status
 import uvicorn
 
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, HTTPException, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 import io
 import numpy as np
@@ -39,18 +40,27 @@ def index():
 
 
 def predict_image(contents, model):
-    img = image.load_img(io.BytesIO(contents), target_size=(224, 224))
-    img_array = image.img_to_array(img)
-    img_processed = np.expand_dims(img_array, axis=0)
-    img_processed /= 255.0
+    try:
+        img = image.load_img(io.BytesIO(contents), target_size=(224, 224))
+        img_array = image.img_to_array(img)
+        img_processed = np.expand_dims(img_array, axis=0)
+        img_processed /= 255.0
 
-    prediction = model.predict(img_processed)
-    # prob = prediction[0]
-    index = np.argmax(prediction)
+        prediction = model.predict(img_processed)
+        # prob = prediction[0]
+        index = np.argmax(prediction)
 
-    return {
-        "prediction": str(classes[index]).title(),
-    }
+        return {
+            "prediction": str(classes[index]).title(),
+        }
+
+    except Exception as e:
+        raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Something worng.",
+        )
+
+    
 
 
 @app.post("/predict")

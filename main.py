@@ -1,4 +1,3 @@
-from grpc import Status
 import uvicorn
 
 from fastapi import FastAPI, File, HTTPException, UploadFile, status
@@ -8,7 +7,6 @@ import numpy as np
 from tensorflow.keras.models import load_model  # type: ignore
 
 from tensorflow.keras.preprocessing import image  # type: ignore
-from tensorflow.keras.applications.inception_v3 import preprocess_input  # type: ignore
 
 from io import BytesIO
 
@@ -56,11 +54,9 @@ def predict_image(contents, model):
 
     except Exception as e:
         raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Something worng.",
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Something worng.",
         )
-
-    
 
 
 @app.post("/predict")

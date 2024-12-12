@@ -24,3 +24,13 @@ docker tag agri-cure-image registry.digitalocean.com/agri-cure/agri-cure-image
 
 docker push registry.digitalocean.com/<regitry-name>/<docker-image-name>
 docker push registry.digitalocean.com/agri-cure/agri-cure-image
+
+
+### Required packages
+
+pip3 install fastapi
+pip3 install uvicorn
+pip3 install pillow
+pip3 install numpy
+pip3 install tensorflow
+pip3 install python-multipart
